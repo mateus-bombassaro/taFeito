@@ -18,13 +18,15 @@ import {
 import { VisibilityOff, Visibility } from '@mui/icons-material';
 
 import { CustomizedCardHeader } from './styles';
-
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string|null>(null);
+
+  const navigate = useNavigate();
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -51,17 +53,15 @@ const Login = () => {
         }
       })
       .then(data => {
-        console.log('sucesso', JSON.stringify(data))
-        console.log(data)
         if(data.responseStatus === 422 && data.data?.mensagem) {
           setErrorMessage(data.data?.mensagem)
         } else if(data.responseStatus === 400) {
           setErrorMessage('Requisição inválida!')
         } else if(data.responseStatus === 200) {
-          alert('Requisição válida!')
+          navigate('/tarefas');
         } 
       })
-      .catch(error => setErrorMessage('Erro no servidor, tente novamente em alguns minutos!'));
+      .catch(() => setErrorMessage('Erro no servidor, tente novamente em alguns minutos!'));
   }
 
   return (

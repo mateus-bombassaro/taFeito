@@ -1,11 +1,11 @@
-import React from 'react';
+import { ReactNode }  from 'react';
 import './App.css';
-import Login from './pages/login/Login';
 
-function App() {
+function App(props:{children:ReactNode}) {
+
   return (
     <div className="App">
-      <Login />
+      {props.children}
     </div>
   );
 }
