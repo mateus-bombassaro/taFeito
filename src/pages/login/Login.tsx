@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { 
   Box, 
   CardHeader, 
@@ -20,6 +20,8 @@ import { VisibilityOff, Visibility } from '@mui/icons-material';
 import { CustomizedCardHeader } from './styles';
 import { useNavigate } from 'react-router-dom';
 
+import { useAuth } from '../../providers/authProvider';
+
 const Login = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('');
@@ -27,10 +29,17 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState<string|null>(null);
 
   const navigate = useNavigate();
+  const { token, setToken } = useAuth();
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   }
+
+  useEffect(() => {
+    if(token) {
+      navigate('/tarefas', {replace: true});
+    }
+  }, [token]);
 
   const isDisabled = useMemo(() => !(username && password), [username, password]);
 
@@ -58,7 +67,9 @@ const Login = () => {
         } else if(data.responseStatus === 400) {
           setErrorMessage('Requisição inválida!')
         } else if(data.responseStatus === 200) {
-          navigate('/tarefas');
+          if(data?.data?.token){
+            setToken(data?.data?.token)
+          }
         } 
       })
       .catch(() => setErrorMessage('Erro no servidor, tente novamente em alguns minutos!'));
