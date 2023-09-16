@@ -1,4 +1,3 @@
-import { ReactNode }  from 'react';
 import './App.css';
 import AuthProvider from './providers/authProvider';
 
