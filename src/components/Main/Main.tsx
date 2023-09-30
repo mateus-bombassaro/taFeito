@@ -1,13 +1,14 @@
 import { Box, Typography } from "@mui/material";
-import TaskInput from "../TaskInput/TaskInput";
+import TaskInputWrapper from "../TaskInputWrapper/TaskInputWrapper";
 
 import { CustomizedSectionBox } from "./styles";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
 import { url_categorias } from "../../utils/api";
-import { Categoria, Tarefa } from "../../utils/model";
+import { Categoria } from "../../utils/model";
 import TaskList from '../TaskList/TaskList';
+import { useGlobalContext } from '../../utils/global';
 
 type MainProps = {
     categorias: Categoria[];
@@ -15,13 +16,16 @@ type MainProps = {
 const Main = (props: MainProps) => {
   const { categorias } = props;
 
-  const [selectedTaskInput, setSelectedTaskInput] = useState<string | null>(
-    null
-  );
-
-  const [refetchTaskStatus, setRefectchTaskStatus] = useState<number>(0);
+  const {
+    isEditingTask,
+    selectedTaskInput,
+    refetchTaskStatus
+  } = useGlobalContext();
 
   const renderCategoriaSection = (categoria_item: Categoria) => {
+    const showTaskInput = isEditingTask === false && (selectedTaskInput === null ||
+      selectedTaskInput === categoria_item.descricao);
+
     return (
       <CustomizedSectionBox key={categoria_item.id} pt={2} pb={1}>
         <Typography
@@ -37,14 +41,9 @@ const Main = (props: MainProps) => {
 
         <TaskList categoria={categoria_item} taskStatus={refetchTaskStatus}/>
 
-        {selectedTaskInput === null ||
-        selectedTaskInput === categoria_item.descricao ? (
-          <TaskInput
+        {showTaskInput ? (
+          <TaskInputWrapper
             category={categoria_item}
-            onSelectCreateTask={(category) => {
-              setSelectedTaskInput(category);
-              setRefectchTaskStatus(refetchTaskStatus+1);
-            }}
           />
         ) : null}
       </CustomizedSectionBox>
@@ -81,7 +80,7 @@ const MainWrapper = () => {
   const [categorias, setCategorias] = useState<null | Categoria[]>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   const fetchCategories = async () => {
     try {
       const response = await axios.get(url_categorias);
