@@ -6,7 +6,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import { url_categorias } from "../../utils/api";
-import { Categoria } from "../../utils/model";
+import { Categoria, Tarefa } from "../../utils/model";
+import TaskList from '../TaskList/TaskList';
 
 type MainProps = {
     categorias: Categoria[];
@@ -18,19 +19,31 @@ const Main = (props: MainProps) => {
     null
   );
 
+  const [refetchTaskStatus, setRefectchTaskStatus] = useState<number>(0);
+
   const renderCategoriaSection = (categoria_item: Categoria) => {
     return (
       <CustomizedSectionBox key={categoria_item.id} pt={2} pb={1}>
-        <Typography variant="h2" sx={{
-          fontSize: '2rem',
-          marginBottom: '8px'
-        }}> {categoria_item.descricao} </Typography>
-        <div>TODO: Listar Tarefas {categoria_item.descricao}</div>
-        {selectedTaskInput === null || selectedTaskInput === categoria_item.descricao ? (
+        <Typography
+          variant="h2"
+          sx={{
+            fontSize: "2rem",
+            marginBottom: "8px",
+          }}
+        >
+          {" "}
+          {categoria_item.descricao}{" "}
+        </Typography>
+
+        <TaskList categoria={categoria_item} taskStatus={refetchTaskStatus}/>
+
+        {selectedTaskInput === null ||
+        selectedTaskInput === categoria_item.descricao ? (
           <TaskInput
             category={categoria_item}
             onSelectCreateTask={(category) => {
               setSelectedTaskInput(category);
+              setRefectchTaskStatus(refetchTaskStatus+1);
             }}
           />
         ) : null}
@@ -43,15 +56,21 @@ const Main = (props: MainProps) => {
       display="flex"
       flexWrap={"wrap"}
       sx={{
-        textAlign: 'center',
-        maxWidth: '720px',
+        textAlign: "center",
+        maxWidth: "720px",
         margin: "0 auto",
       }}
     >
       <CustomizedSectionBox>
-        <Typography variant="h1" sx={{
-          fontSize: '3rem'
-        }}> Suas tarefas </Typography>
+        <Typography
+          variant="h1"
+          sx={{
+            fontSize: "3rem",
+          }}
+        >
+          {" "}
+          Suas tarefas{" "}
+        </Typography>
       </CustomizedSectionBox>
       {categorias.map((categoria) => renderCategoriaSection(categoria))}
     </Box>
@@ -60,19 +79,33 @@ const Main = (props: MainProps) => {
 
 const MainWrapper = () => {
   const [categorias, setCategorias] = useState<null | Categoria[]>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(url_categorias);
+      setCategorias(response.data);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unexpected error occurred.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    axios.get(url_categorias).then((response) => {
-      console.log("xxx", response.data);
-      setCategorias(response.data);
-    });
+    fetchCategories();
   }, []);
 
-  if (categorias !== null) {
+  if (categorias) {
     return <Main categorias={categorias} />;
   }
 
-  return <div>Loading!!</div>;
+  return <div>Carregando!</div>;
 };
 
 export default MainWrapper;
