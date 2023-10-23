@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import {AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem} from '@mui/material';
 import {TaskAlt, Logout} from '@mui/icons-material';
 
-import axios from "axios";
+import { api } from '../../providers/customAxios';
 
 import { url_usuarios_autenticado } from '../../utils/api';
 
@@ -23,7 +23,7 @@ const NavBar = (props: NavBarProps) => {
   }>(null);
 
   useEffect(() => {
-    axios.get(url_usuarios_autenticado).then((response) => {
+    api.get(url_usuarios_autenticado).then((response) => {
       setUserData(response.data.usuario);
     });
   }, []);

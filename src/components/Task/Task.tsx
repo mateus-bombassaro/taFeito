@@ -3,7 +3,7 @@ import { Tarefa } from '../../utils/model';
 
 import { Box } from "@mui/material";
 import { useState } from "react";
-import { format, formatDistance, formatRelative, subDays,parseISO } from 'date-fns';
+import { format, formatDistance, formatRelative, subDays, parseISO } from 'date-fns';
 import TaskTags from "../TaskTags/TaskTags";
 import {
   ListItem,
@@ -19,7 +19,7 @@ import { useGlobalContext } from '../../utils/global';
 import DeleteTaskDialog from '../DeleteTaskDialog/DeleteTaskDialog';
 import { useSnackbar } from 'notistack';
 import { url_update_task, url_finish_task, url_reopen_task } from "../../utils/api";
-import axios from 'axios';
+import { api } from '../../providers/customAxios';
 
 type TaskProps = {
   task: Tarefa;
@@ -42,7 +42,7 @@ const Task = (props: TaskProps) => {
     const taskId = task?.id ?? -1;
     const custom_task_url = url_finish_task.replace(":id", taskId.toString());
     try {
-      await axios.post(custom_task_url, {
+      await api.post(custom_task_url, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -60,7 +60,7 @@ const Task = (props: TaskProps) => {
     const taskId = task?.id ?? -1;
     const custom_task_url = url_reopen_task.replace(":id", taskId.toString());
     try {
-      await axios.post(custom_task_url, {
+      await api.post(custom_task_url, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -93,7 +93,7 @@ const Task = (props: TaskProps) => {
     const taskId = task?.id ?? -1;
     const custom_task_url = url_update_task.replace(":id", taskId.toString());
     try {
-      await axios.delete(custom_task_url, {
+      await api.delete(custom_task_url, {
         headers: {
           "Content-Type": "application/json",
         },

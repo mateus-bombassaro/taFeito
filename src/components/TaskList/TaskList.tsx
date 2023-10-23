@@ -1,5 +1,4 @@
 import { Categoria, Tarefa} from '../../utils/model';
-import axios from "axios";
 import { useEffect, useState } from "react";
 
 import List from "@mui/material/List";
@@ -11,6 +10,7 @@ import { usePreviousValue } from "../../utils/hooks";
 import { useGlobalContext } from '../../utils/global';
 import TaskInput from '../TaskInput/TaskInput';
 import Task from '../Task/Task';
+import { api } from '../../providers/customAxios';
 
 type TaskListWrapperProps = {
   categoria: Categoria;
@@ -76,7 +76,7 @@ const TaskListWrapper = (props: TaskListWrapperProps) => {
   const fetchtasks = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(url_tasks);
+      const response = await api.get(url_tasks);
       const category_tasks = response.data
         .filter((task: Tarefa) => task.id_categoria === categoria.id)
         .sort((a:Tarefa, b:Tarefa) => {

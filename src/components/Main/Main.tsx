@@ -3,7 +3,7 @@ import TaskInputWrapper from "../TaskInputWrapper/TaskInputWrapper";
 
 import { CustomizedSectionBox } from "./styles";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { api } from '../../providers/customAxios';
 
 import { url_categorias } from "../../utils/api";
 import { Categoria } from "../../utils/model";
@@ -83,7 +83,7 @@ const MainWrapper = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(url_categorias);
+      const response = await api.get(url_categorias);
       setCategorias(response.data);
     } catch (err) {
       if (err instanceof Error) {
