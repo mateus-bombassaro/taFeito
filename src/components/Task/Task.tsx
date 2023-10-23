@@ -4,6 +4,7 @@ import { Tarefa } from '../../utils/model';
 import { Box } from "@mui/material";
 import { useState } from "react";
 import { format, formatDistance, formatRelative, subDays,parseISO } from 'date-fns';
+import TaskTags from "../TaskTags/TaskTags";
 import {
   ListItem,
   ListItemButton,
@@ -157,6 +158,7 @@ const Task = (props: TaskProps) => {
           <ListItemText id={labelId} primary={task.descricao} secondary={renderFinishedText()}/>
         </ListItemButton>
       </ListItem>
+      <TaskTags task={task}/>
       <DeleteTaskDialog
         task={task}
         openedDialog={openedDialog}
