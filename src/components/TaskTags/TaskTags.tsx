@@ -3,7 +3,7 @@ import { Tarefa } from '../../utils/model';
 import { Box, Chip, IconButton, Tooltip, Input } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
-import { api } from '../../providers/customAxios';
+import { api } from "../../providers/customAxios";
 
 import { url_add_task_tag } from "../../utils/api";
 import { useGlobalContext } from "../../utils/global";
@@ -72,7 +72,6 @@ const TaskTags = (props: TaskTagsProps) => {
 
   const checkKeyPressed = (e: any) => {
     if (e.keyCode == 13) {
-      console.log("ENTER", e.target.value);
       addTaskTag(e.target.value);
     }
     if (e.keyCode == 27) {
