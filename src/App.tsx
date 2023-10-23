@@ -11,7 +11,7 @@ function App() {
     null
   );
   const [refetchTaskStatus, setRefectchTaskStatus] = useState<number>(0);
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   return (
     <div className="App">
@@ -20,7 +20,8 @@ function App() {
           <MyGlobalContext.Provider value={{ 
             isEditingTask, setIsEditingTask,
             selectedTaskInput,setSelectedTaskInput,
-            refetchTaskStatus,setRefectchTaskStatus }}>
+            refetchTaskStatus,setRefectchTaskStatus,
+            isLoading, setIsLoading }}>
             <Routes />
           </MyGlobalContext.Provider>
         </SnackbarProvider>

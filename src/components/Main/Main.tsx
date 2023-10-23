@@ -1,14 +1,15 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Button} from "@mui/material";
 import TaskInputWrapper from "../TaskInputWrapper/TaskInputWrapper";
 
 import { CustomizedSectionBox } from "./styles";
 import { useEffect, useState } from "react";
-import { api } from '../../providers/customAxios';
+import { api } from "../../providers/customAxios";
 
 import { url_categorias } from "../../utils/api";
 import { Categoria } from "../../utils/model";
-import TaskList from '../TaskList/TaskList';
-import { useGlobalContext } from '../../utils/global';
+import TaskList from "../TaskList/TaskList";
+import { useGlobalContext } from "../../utils/global";
+import ProjectTasks  from '../ProjectTasks/ProjectTasks';
 
 type MainProps = {
     categorias: Categoria[];
@@ -16,14 +17,13 @@ type MainProps = {
 const Main = (props: MainProps) => {
   const { categorias } = props;
 
-  const {
-    isEditingTask,
-    selectedTaskInput,
-    refetchTaskStatus
-  } = useGlobalContext();
+  const { isEditingTask, selectedTaskInput, refetchTaskStatus } =
+    useGlobalContext();
 
   const renderCategoriaSection = (categoria_item: Categoria) => {
-    const showTaskInput = isEditingTask === false && (selectedTaskInput === null ||
+    const showTaskInput =
+      isEditingTask === false &&
+      (selectedTaskInput === null ||
       selectedTaskInput === categoria_item.descricao);
 
     return (
@@ -39,13 +39,9 @@ const Main = (props: MainProps) => {
           {categoria_item.descricao}{" "}
         </Typography>
 
-        <TaskList categoria={categoria_item} taskStatus={refetchTaskStatus}/>
+        <TaskList categoria={categoria_item} taskStatus={refetchTaskStatus} />
 
-        {showTaskInput ? (
-          <TaskInputWrapper
-            category={categoria_item}
-          />
-        ) : null}
+        {showTaskInput ? <TaskInputWrapper category={categoria_item} /> : null}
       </CustomizedSectionBox>
     );
   };
@@ -70,6 +66,7 @@ const Main = (props: MainProps) => {
           {" "}
           Suas tarefas{" "}
         </Typography>
+        <ProjectTasks categories={categorias} />
       </CustomizedSectionBox>
       {categorias.map((categoria) => renderCategoriaSection(categoria))}
     </Box>
